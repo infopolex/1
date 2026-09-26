@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>INFOPOLEX — Polar Science Portal</title>
+<style>
+:root{--bg:#06101f;--panel:#0b1b30;--panel2:#10253e;--text:#edf6ff;--muted:#9db2c9;--line:#203a56;--cyan:#57d7ff;--green:#6ee7b7;--orange:#ffbd66;--danger:#ff7d8b}*{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:radial-gradient(circle at 80% 0%,#123454 0,#06101f 42%);color:var(--text);min-height:100vh}button,input,select{font:inherit}.app{display:flex;min-height:100vh}.app.ready{display:flex}.side{width:250px;background:rgba(4,13,27,.92);border-right:1px solid var(--line);padding:22px 16px;position:fixed;top:0;bottom:0}.brand{font-weight:900;font-size:22px;letter-spacing:.5px;margin-bottom:5px}.brand span{color:var(--cyan)}.tag{font-size:11px;color:var(--muted);margin-bottom:28px}.nav button{width:100%;border:0;background:transparent;color:#b9cbe0;text-align:left;padding:12px 13px;border-radius:10px;margin:3px 0;cursor:pointer}.nav button:hover,.nav button.active{background:#102b47;color:#fff}.nav button.active{box-shadow:inset 3px 0 var(--cyan)}.bottom{position:absolute;bottom:20px;left:16px;right:16px}.role{background:#0d2036;border:1px solid var(--line);border-radius:12px;padding:12px;font-size:12px;color:var(--muted)}.role b{color:#fff}.main{margin-left:250px;width:calc(100% - 250px);padding:25px 34px}.top{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:25px}.crumb{color:var(--muted);font-size:13px}.actions{display:flex;gap:8px}.btn{border:1px solid var(--line);background:#0d2036;color:#eaf6ff;padding:9px 13px;border-radius:9px;cursor:pointer}.btn.primary{background:#1a789b;border-color:#36b7df}.btn:hover{filter:brightness(1.15)}.hero{border:1px solid var(--line);border-radius:18px;padding:28px;background:linear-gradient(135deg,#0c2540,#0a1729 60%,#10314a);overflow:hidden;position:relative}.hero:after{content:'◉';position:absolute;right:55px;top:12px;font-size:150px;color:#57d7ff0d}.eyebrow{color:var(--cyan);font-size:12px;font-weight:800;letter-spacing:1.4px}.hero h1{font-size:39px;margin:9px 0 10px;max-width:750px}.hero p{color:#b8cbe0;max-width:720px;line-height:1.6}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin:17px 0}.card{background:rgba(10,27,47,.9);border:1px solid var(--line);border-radius:14px;padding:17px}.stat{font-size:27px;font-weight:800}.muted{color:var(--muted);font-size:12px}.section{display:none}.section.active{display:block}.section h2{margin:0 0 5px}.section .sub{color:var(--muted);margin:0 0 18px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}.input{background:#08182b;color:#fff;border:1px solid var(--line);border-radius:9px;padding:11px 12px;min-width:250px;outline:none}.select{background:#08182b;color:#fff;border:1px solid var(--line);border-radius:9px;padding:10px}.repo{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.repo .card h3{margin:8px 0}.pill{display:inline-block;padding:4px 8px;border-radius:99px;background:#12334d;color:#8de6ff;font-size:10px;font-weight:700}.verify{color:var(--green);font-size:11px}.map{height:470px;border-radius:17px;border:1px solid var(--line);background:radial-gradient(circle at 50% 52%,#1b6e85 0,#0a3149 22%,#061c30 45%,#040e1c 75%);position:relative;overflow:hidden}.map:before{content:'';position:absolute;inset:0;background:repeating-radial-gradient(circle at 50% 52%,transparent 0 55px,#55d8ff18 56px 57px);}.globe{position:absolute;width:280px;height:280px;border-radius:50%;border:2px solid #66dcff55;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 60px #4ad7ff22,inset 0 0 50px #4ad7ff22}.station{position:absolute;width:13px;height:13px;border-radius:50%;background:var(--orange);box-shadow:0 0 15px var(--orange);cursor:pointer}.s1{left:49%;top:42%}.s2{left:56%;top:53%}.s3{left:42%;top:57%}.s4{left:52%;top:63%}.maplabel{position:absolute;top:18px;left:20px;background:#061526cc;padding:10px 13px;border-radius:9px;border:1px solid var(--line);font-size:12px}.maphint{position:absolute;bottom:15px;left:20px;color:#a9c1d5;font-size:11px}
+.polar-wrap{display:grid;grid-template-columns:1.35fr .65fr;gap:14px}.polar-stage{height:500px;border-radius:17px;border:1px solid var(--line);background:radial-gradient(circle at 50% 45%,#0e4663 0,#071f36 42%,#040d1a 78%);position:relative;overflow:hidden}.polar-stage canvas{width:100%;height:100%;display:block;cursor:grab}.polar-stage canvas.dragging{cursor:grabbing}.polar-ui{position:absolute;top:15px;right:15px;display:flex;gap:7px}.polar-ui .btn{background:#071a2bcc}.polar-label{position:absolute;left:16px;top:15px;background:#061526cc;padding:9px 12px;border-radius:9px;border:1px solid var(--line);font-size:11px;color:#bfeaff}.polar-help{position:absolute;left:16px;bottom:14px;background:#061526cc;padding:8px 11px;border-radius:8px;color:#a9c1d5;font-size:11px}.station-list{display:grid;gap:10px}.station-card{background:#0a1b2f;border:1px solid var(--line);border-radius:13px;padding:14px;cursor:pointer}.station-card:hover,.station-card.active{border-color:#3bbce5;background:#0e2942}.station-card h3{margin:0 0 5px}.station-card p{margin:0;color:var(--muted);font-size:12px;line-height:1.45}.station-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--orange);margin-right:7px;box-shadow:0 0 9px #ffbd66}.map-detail{background:#08182b;border:1px solid var(--line);border-radius:13px;padding:15px;margin-top:10px;min-height:150px}.map-detail h3{margin:0 0 7px}.map-detail p{color:var(--muted);font-size:12px;line-height:1.55}.map-legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:11px;color:var(--muted)}.legend-item{display:flex;align-items:center;gap:5px}.legend-dot{width:8px;height:8px;border-radius:50%;background:var(--orange)}.legend-line{width:18px;height:2px;background:#57d7ff;display:inline-block}.north-badge{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none;color:#bdeeff88;font-size:10px;letter-spacing:1px}@media(max-width:900px){.polar-wrap{grid-template-columns:1fr}.polar-stage{height:430px}}
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.media{height:190px;border-radius:13px;background:linear-gradient(145deg,#173b56,#0a1c30);border:1px solid var(--line);position:relative;overflow:hidden;padding:15px}.media:before{content:'❄';position:absolute;right:16px;bottom:-10px;font-size:110px;color:#8eeaff13}.media h3{position:absolute;bottom:13px;left:15px;margin:0}.studio{display:grid;grid-template-columns:1.1fr .9fr;gap:15px}.textarea{width:100%;min-height:190px;background:#07182b;border:1px solid var(--line);border-radius:10px;color:#fff;padding:13px;resize:vertical}.preview{min-height:270px;background:#08192b;border:1px solid var(--line);border-radius:12px;padding:17px;white-space:pre-wrap;line-height:1.55}.admin{display:grid;grid-template-columns:1.4fr .6fr;gap:15px}.table{width:100%;border-collapse:collapse}.table th,.table td{padding:12px 8px;border-bottom:1px solid var(--line);text-align:left;font-size:12px}.ok{color:var(--green)}.warn{color:var(--orange)}.footer{margin-top:25px;color:#66819b;font-size:11px;text-align:center;padding-bottom:10px}@media(max-width:900px){.side{width:190px}.main{margin-left:190px;width:calc(100% - 190px);padding:18px}.repo,.gallery{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr 1fr}.studio,.admin{grid-template-columns:1fr}}@media(max-width:650px){.side{position:static;width:100%;height:auto;border-right:0;border-bottom:1px solid var(--line)}.app{display:block}.main{margin:0;width:100%}.bottom{display:none}.repo,.gallery,.grid{grid-template-columns:1fr}.hero h1{font-size:28px}.top{align-items:flex-start;flex-direction:column}}
+
+
+/* INFOPOLEX media + public AI upgrades */
+.media{min-height:255px!important;height:255px!important;overflow:hidden!important;padding:0!important;position:relative!important;background:#081a2d!important}
+.media img.media-img{width:100%;height:100%;object-fit:cover;display:block!important;position:absolute;inset:0}
+.media-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,12,24,.05),rgba(3,12,24,.88));z-index:2}
+.media .pill{position:absolute;top:12px;left:12px;z-index:4}.media h3{z-index:4;bottom:43px!important}.media-open{position:absolute;right:12px;bottom:12px;z-index:5;border:1px solid #315674;background:#0d2a43;color:#fff;padding:7px 11px;border-radius:8px;cursor:pointer}.media-open:hover{filter:brightness(1.2)}
+.media-admin{display:none;gap:8px;flex-wrap:wrap;margin-bottom:15px}.media-admin.show{display:flex}.media-upload-box{display:none;background:#081a2d;border:1px dashed #315674;border-radius:12px;padding:14px;margin-bottom:15px}.media-upload-box.show{display:block}.media-upload-box .input{min-width:0;width:100%}.media-empty{padding:30px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px;grid-column:1/-1}
+.ai-chat{display:grid;grid-template-columns:1fr .75fr;gap:15px}.ai-box{background:#07182b;border:1px solid var(--line);border-radius:12px;padding:15px}.ai-messages{height:310px;overflow:auto;display:flex;flex-direction:column;gap:10px;margin-bottom:10px}.ai-msg{padding:10px 12px;border-radius:10px;max-width:90%;line-height:1.5;font-size:13px}.ai-msg.user{align-self:flex-end;background:#123d59}.ai-msg.bot{align-self:flex-start;background:#0d243b;border:1px solid #21415d}.ai-compose{display:flex;gap:8px}.ai-compose input{flex:1;min-width:0}.ai-status{font-size:11px;color:var(--muted);margin-top:8px}.ai-suggestions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.ai-suggestions button{font-size:11px}
+@media(max-width:900px){.ai-chat{grid-template-columns:1fr}}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;align-items:center;justify-content:center;padding:20px}.modal.show{display:flex}.modalbox{width:min(760px,96vw);max-height:88vh;overflow:auto;background:#0b1b30;border:1px solid #2b5275;border-radius:18px;padding:24px;box-shadow:0 20px 80px rgba(0,0,0,.55)}.modalhead{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}.modalbox h2{margin:8px 0}.modalclose{border:1px solid var(--line);background:#10253e;color:#fff;border-radius:9px;padding:8px 12px;cursor:pointer}.detailgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:18px 0}.detailitem{background:#08182b;border:1px solid var(--line);border-radius:10px;padding:12px}.detailitem b{display:block;color:#8de6ff;font-size:11px;margin-bottom:4px}.modalactions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}@media(max-width:650px){.detailgrid{grid-template-columns:1fr}}
+.login-screen{display:none;position:fixed;inset:0;z-index:10000;align-items:center;justify-content:center;padding:25px;align-items:center;justify-content:center;padding:25px;background:radial-gradient(circle at 70% 10%,#123454 0,#06101f 48%,#030914 100%)}.login-card{width:min(440px,94vw);position:relative;background:rgba(10,27,47,.96);border:1px solid #2b5275;border-radius:20px;padding:30px;box-shadow:0 20px 80px rgba(0,0,0,.5)}.login-logo{font-weight:900;font-size:28px;margin-bottom:5px}.login-logo span{color:var(--cyan)}.login-sub{color:var(--muted);font-size:13px;margin-bottom:25px}.login-card label{display:block;color:#b9cbe0;font-size:12px;margin:13px 0 6px}.login-input{width:100%;background:#07182b;color:#fff;border:1px solid var(--line);border-radius:9px;padding:12px;outline:none}.login-input:focus{border-color:var(--cyan)}.login-btn{width:100%;margin-top:18px}.login-msg{min-height:20px;margin-top:12px;color:var(--danger);font-size:12px}.login-note{color:#66819b;font-size:11px;line-height:1.5;margin-top:18px}
+
+.media{height:230px;padding:0;cursor:pointer;background:#0a1b2f;position:relative}.media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.media-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,12,25,.05),rgba(3,12,25,.9))}.media .pill{position:absolute;top:13px;left:13px;z-index:2}.media h3{z-index:2;left:15px;bottom:43px}.media-open{position:absolute;right:13px;bottom:12px;z-index:3;border:1px solid #3c6b88;background:#071a2bcc;color:#fff;padding:7px 11px;border-radius:8px;cursor:pointer}.media-open:hover{background:#17425e}.visual-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;letter-spacing:2px}.video-art{background:radial-gradient(circle at 50% 40%,#2d7890,#07182b 65%)}.video-art span{font-size:55px}.video-art small,.ocean-art small{font-size:10px;color:#bdeeff}.infographic-art{background:linear-gradient(145deg,#123b54,#07182b);font-size:25px}.infographic-art span{font-size:11px;color:#8de6ff}.infographic-art i{font-size:55px;color:#8de6ff33}.ocean-art{background:radial-gradient(circle at 50% 30%,#28758a,#06203a 65%);font-size:60px}.climate-art{background:radial-gradient(circle at 45% 45%,#29556c,#07182b 70%);font-size:25px}.climate-art span{font-size:11px;color:#bdeeff}.climate-art i{font-size:60px;color:#8de6ff33}.media.hidden{display:none}.gallery-tools{margin-bottom:15px}.modal{display:none;position:fixed;inset:0;background:rgba(1,8,18,.78);align-items:center;justify-content:center;z-index:1000}.modal.show{display:flex}.modalbox{width:min(560px,92vw);background:#0b1b30;border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:0 20px 60px #0008}.modalbox h2{margin:12px 0 8px}.modalclose{float:right;border:0;background:transparent;color:#bcd0e3;font-size:18px;cursor:pointer}.login-screen{z-index:2000}
+@media(max-width:900px){.gallery{grid-template-columns:1fr 1fr}}@media(max-width:600px){.gallery{grid-template-columns:1fr}}
+.media-full-preview img{max-width:100%;max-height:72vh;object-fit:contain!important}.media-full-preview iframe{min-height:500px}.media-full-preview{flex-direction:column}.media-open{min-width:72px}.js-media-remove{background:#40202a!important;border-color:#7c3546!important}
+</style>
+<style>
+/* REAL MEDIA + FULL VIEWER */
+.gallery .media{height:275px!important;min-height:275px!important;padding:0!important;background:#071726!important}
+.gallery .media-img{width:100%!important;height:100%!important;object-fit:cover!important;display:block!important}
+.gallery .media video.media-img{object-fit:cover!important}
+.media-source{position:absolute;left:12px;bottom:12px;z-index:5;color:#d7efff;font-size:10px;background:#061526cc;padding:5px 7px;border-radius:6px}
+.media-open{bottom:12px!important}
+.media-modal-large{width:min(1180px,96vw)!important;max-height:94vh!important;overflow:auto!important}
+.media-full-preview{background:#020a12;border:1px solid #23435e;border-radius:12px;padding:10px;min-height:300px;display:flex;align-items:center;justify-content:center}
+.media-full-preview img{display:block;width:100%;height:auto;max-height:72vh;object-fit:contain;border-radius:8px}
+.media-full-preview iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:8px;background:#000}
+.media-full-preview video{width:100%;max-height:72vh;border-radius:8px;background:#000}
+.media-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.media-caption{color:#a9bfd4;font-size:12px;line-height:1.5;margin-top:8px}
+.ai-msg.bot{white-space:pre-wrap}
+.ai-source{font-size:10px;color:#83cfee;margin-top:5px}
+</style>
+</head>
+<body><div id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="login-logo">INFOPOLEX<span>◈</span></div>
+    <div class="login-sub">Polar Science Outreach • Knowledge Repository</div>
+    <div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0 0 6px">Sign in</h2><button class="modalclose" type="button" id="loginCloseBtn">✕</button></div>
+    <div class="muted">Use your Firebase Email/Password account.</div>
+    <form id="loginForm">
+      <label for="loginEmail">Email</label>
+      <input class="login-input" id="loginEmail" type="email" autocomplete="username" placeholder="Enter email" required>
+      <label for="loginPassword">Password</label>
+      <input class="login-input" id="loginPassword" type="password" autocomplete="current-password" placeholder="Enter password" required>
+      <button class="btn primary login-btn" id="loginBtn" type="submit">Login</button>
+      <div id="loginMsg" class="login-msg"></div>
+    </form>
+    <div class="login-note">Public visitors can browse the portal without an account. Sign in only when you need editing/publishing features.</div>
+  </div>
+</div>
+<div class="app" id="portalApp">
+<aside class="side"><div class="brand">INFOPOLEX<span>◈</span></div><div class="tag">POLAR SCIENCE • OUTREACH • KNOWLEDGE</div><nav class="nav">
+<button class="active" data-page="home">⌂ &nbsp; Overview</button><button data-page="repo">▤ &nbsp; Knowledge Repository</button><button data-page="map">◎ &nbsp; 3D Polar Map</button><button data-page="gallery">▧ &nbsp; Media Gallery</button><button data-page="studio">✦ &nbsp; AI Social Studio</button><button data-page="admin" id="adminNav" style="display:none">⚙ &nbsp; Admin Dashboard</button></nav><div class="bottom"><div class="role" id="roleBox">Current access<br><b id="roleText">Public Viewer</b></div></div></aside>
+<main class="main"><div class="top"><div class="crumb">SMART INDIA HACKATHON 2026 / PS 26063</div><div class="actions"><span class="muted" id="userEmail" style="align-self:center"></span><button class="btn" id="lite">⚡ Lite Mode</button><button class="btn" id="lang">हिंदी</button><button class="btn primary" id="loginOpenBtn">↪ Login</button><button class="btn" id="logoutBtn" style="display:none">↪ Logout</button></div></div>
+<section id="home" class="section active"><div class="hero"><div class="eyebrow">INTEGRATED POLAR SCIENCE PORTAL</div><h1>India's polar knowledge, connected in one place.</h1><p>Centralized repository, interactive station discovery, visual storytelling and AI-assisted outreach for India's polar science ecosystem.</p><button class="btn primary" onclick="go('repo')">Explore Knowledge Repository →</button></div><div class="grid"><div class="card"><div class="stat">40+ yrs</div><div class="muted">Expedition knowledge</div></div><div class="card"><div class="stat">3D</div><div class="muted">Interactive polar map</div></div><div class="card"><div class="stat">AI</div><div class="muted">Social content generation</div></div><div class="card"><div class="stat">RBAC</div><div class="muted">Verified publishing</div></div></div><div class="card"><h3>Portal workflow</h3><p class="muted">Research data → verification → knowledge repository → AI summary → multilingual content → approved social dissemination.</p></div></section>
+<section id="repo" class="section"><h2>Knowledge Repository</h2><p class="sub">Search and explore structured polar datasets, missions and scientific records.</p><div class="toolbar"><input class="input" id="search" placeholder="Search missions, stations, datasets…"><select class="select" id="filter"><option>All</option><option>Climate</option><option>Ocean</option><option>Atmosphere</option><option>Station</option></select><span id="editControls" style="display:none;gap:10px;flex-wrap:wrap"><button class="btn primary" id="addResearchBtn">＋ Add Research</button><button class="btn" id="seedResearchBtn">＋ Add Demo Records</button></span></div><div class="repo" id="repoGrid"></div></section>
+<section id="map" class="section"><h2>3D Interactive Polar Map</h2><p class="sub">Interactive demo globe for polar station discovery. Drag to rotate, use + / − to zoom, or select a station.</p><div class="polar-wrap"><div class="polar-stage" id="polarStage"><canvas id="polarCanvas" aria-label="Interactive polar research globe"></canvas><div class="polar-label">INDIAN POLAR STATIONS • 3D DEMO</div><div class="polar-ui"><button class="btn" type="button" id="zoomOut">−</button><button class="btn" type="button" id="resetGlobe">Reset</button><button class="btn" type="button" id="zoomIn">+</button></div><div class="polar-help">Drag the globe • Click a station • Scroll to zoom</div><div class="north-badge">SOUTH POLAR VIEW</div></div><div><div class="station-list"><div class="station-card active" data-station="maitri"><h3><span class="station-dot"></span>Maitri</h3><p>Antarctic research station profile and expedition metadata.</p></div><div class="station-card" data-station="bharati"><h3><span class="station-dot"></span>Bharati</h3><p>Antarctic station and Southern Ocean research context.</p></div><div class="station-card" data-station="arctic"><h3><span class="station-dot"></span>Arctic Research Zone</h3><p>Schematic demo region for Arctic research discovery.</p></div></div><div class="map-detail" id="mapDetail"><h3>Maitri Station</h3><p>Selected station. Explore its profile, expedition metadata and related knowledge records.</p><button class="btn primary" type="button" id="mapExplore">Explore related records →</button></div><div class="map-legend"><span class="legend-item"><span class="legend-dot"></span>Station / zone</span><span class="legend-item"><span class="legend-line"></span>Expedition route (schematic)</span></div></div></div></section>
+<section id="gallery" class="section"><h2>Media Visual Gallery</h2><p class="sub">Polar expedition photos, station views, videos and outreach visuals.</p>
+<div class="toolbar gallery-tools"><button class="btn primary media-filter active" data-filter="all">All Media</button><button class="btn media-filter" data-filter="photo">Photos</button><button class="btn media-filter" data-filter="video">Videos</button><button class="btn media-filter" data-filter="infographic">Infographics</button></div>
+<div class="media-admin" id="mediaAdmin"><button class="btn primary" id="addMediaBtn">＋ Add Image / Video</button><button class="btn" id="refreshMediaBtn">↻ Refresh</button><span class="muted" style="align-self:center">Signed-in users can add and remove their media.</span></div>
+<div class="media-upload-box" id="mediaUploadBox"><div class="detailgrid"><div class="detailitem"><b>Title *</b><input class="input" id="mediaTitle" placeholder="e.g. Maitri Station Expedition"></div><div class="detailitem"><b>Type *</b><select class="select" id="mediaType"><option value="photo">Photo / Image</option><option value="video">Video</option><option value="infographic">Infographic</option></select></div></div><div class="detailitem"><b>Select file</b><input class="input" id="mediaFile" type="file" accept="image/*,video/*"></div><div class="modalactions"><button class="btn primary" id="uploadMediaBtn">Upload Media</button><button class="btn" id="cancelMediaBtn">Cancel</button></div><div class="muted" id="mediaUploadMsg" style="margin-top:8px"></div></div>
+<div class="gallery" id="mediaGallery">
+  <div class="media media-photo" data-type="photo">
+    <img class="media-img" alt="Maitri Indian Antarctic Research Station" src="https://upload.wikimedia.org/wikipedia/commons/1/17/%E0%A4%AE%E0%A5%88%E0%A4%A4%E0%A5%8D%E0%A4%B0%E0%A5%80%2C_%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%AF_%E0%A4%B8%E0%A5%8D%E0%A4%9F%E0%A5%87%E0%A4%B6%E0%A4%A8_%E0%A4%85%E0%A4%82%E0%A4%9F%E0%A4%BE%E0%A4%B0%E0%A5%8D%E0%A4%95%E0%A4%9F%E0%A4%BF%E0%A4%95_%E0%A4%AE%E0%A4%B9%E0%A4%BE%E0%A4%A6%E0%A5%8D%E0%A4%B5%E0%A5%80%E0%A4%AA.jpg">
+    <div class="media-shade"></div><span class="pill">PHOTO • ORIGINAL</span>
+    <h3>Maitri Research Station</h3>
+    <span class="media-source">Wikimedia Commons • 2048×1536</span>
+    <button class="media-open" onclick="openMediaReal('Maitri Research Station','photo','Indian Antarctic research station photograph.','https://upload.wikimedia.org/wikipedia/commons/1/17/%E0%A4%AE%E0%A5%88%E0%A4%A4%E0%A5%8D%E0%A4%B0%E0%A5%80%2C_%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%AF_%E0%A4%B8%E0%A5%8D%E0%A4%9F%E0%A5%87%E0%A4%B6%E0%A4%A8_%E0%A4%85%E0%A4%82%E0%A4%9F%E0%A4%BE%E0%A4%B0%E0%A5%8D%E0%A4%95%E0%A4%9F%E0%A4%BF%E0%A4%95_%E0%A4%AE%E0%A4%B9%E0%A4%BE%E0%A4%A6%E0%A5%8D%E0%A4%B5%E0%A5%80%E0%A4%AA.jpg','https://commons.wikimedia.org/wiki/File:%E0%A4%AE%E0%A5%88%E0%A4%A4%E0%A5%8D%E0%A4%B0%E0%A5%80%2C_%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%AF_%E0%A4%B8%E0%A5%8D%E0%A4%9F%E0%A5%87%E0%A4%B6%E0%A4%A8_%E0%A4%85%E0%A4%82%E0%A4%9F%E0%A4%BE%E0%A4%B0%E0%A5%8D%E0%A4%95%E0%A4%9F%E0%A4%BF%E0%A4%95_%E0%A4%AE%E0%A4%B9%E0%A4%BE%E0%A4%A6%E0%A5%8D%E0%A4%B5%E0%A5%80%E0%A4%AA.jpg')">Open Full</button>
+  </div>
+
+  <div class="media media-photo" data-type="photo">
+    <img class="media-img" alt="Bharati Indian Antarctic Research Station" src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Bharati_permanent_Antarctic_research_station.jpg">
+    <div class="media-shade"></div><span class="pill">PHOTO • ORIGINAL</span>
+    <h3>Bharati Research Station</h3>
+    <span class="media-source">Wikimedia Commons • 900×596</span>
+    <button class="media-open" onclick="openMediaReal('Bharati Research Station','photo','Indian Antarctic research station photograph.','https://upload.wikimedia.org/wikipedia/commons/3/3a/Bharati_permanent_Antarctic_research_station.jpg','https://commons.wikimedia.org/wiki/File:Bharati_permanent_Antarctic_research_station.jpg')">Open Full</button>
+  </div>
+
+  <div class="media media-photo" data-type="photo">
+    <img class="media-img" alt="Maitri station satellite image" src="https://upload.wikimedia.org/wikipedia/commons/4/45/Novolazarevskaya_and_Maitri_research_stations_in_Antarctica_ESA23857066.jpeg">
+    <div class="media-shade"></div><span class="pill">SATELLITE • ORIGINAL</span>
+    <h3>Maitri — Sentinel-2 View</h3>
+    <span class="media-source">ESA/Copernicus • 1920×1920</span>
+    <button class="media-open" onclick="openMediaReal('Maitri — Sentinel-2 View','photo','Copernicus Sentinel-2 image showing India’s Maitri station area.','https://upload.wikimedia.org/wikipedia/commons/4/45/Novolazarevskaya_and_Maitri_research_stations_in_Antarctica_ESA23857066.jpeg?utm_campaign=index&utm_content=original&utm_source=commons.wikimedia.org','https://commons.wikimedia.org/wiki/File:Novolazarevskaya_and_Maitri_research_stations_in_Antarctica_ESA23857066.jpeg')">Open Full</button>
+  </div>
+
+  <div class="media media-photo" data-type="photo">
+    <img class="media-img" alt="Dakshin Gangotri Indian Antarctic station" src="https://upload.wikimedia.org/wikipedia/commons/f/fb/Dakshin_Gangotri_station.jpg">
+    <div class="media-shade"></div><span class="pill">PHOTO • HISTORICAL</span>
+    <h3>Dakshin Gangotri Station</h3>
+    <span class="media-source">Wikimedia Commons • 1800×1200</span>
+    <button class="media-open" onclick="openMediaReal('Dakshin Gangotri Station','photo','Historical photograph of India’s first Antarctic scientific base.','https://upload.wikimedia.org/wikipedia/commons/f/fb/Dakshin_Gangotri_station.jpg','https://commons.wikimedia.org/wiki/File:Dakshin_Gangotri_station.jpg')">Open Full</button>
+  </div>
+
+  <div class="media media-video" data-type="video">
+    <img class="media-img" alt="NCPOR polar science video" src="https://i.ytimg.com/vi/wpjAOife-lk/hqdefault.jpg">
+    <div class="media-shade"></div><span class="pill">VIDEO • YOUTUBE</span>
+    <h3>NCPOR & Indian Polar Stations</h3>
+    <span class="media-source">YouTube video • Maitri / Bharati / Himadri</span>
+    <button class="media-open" onclick="openMediaReal('NCPOR & Indian Polar Stations','video','Video covering NCPOR, Maitri, Bharati, Himadri and Indian polar research.','https://www.youtube-nocookie.com/embed/wpjAOife-lk?rel=0','https://www.youtube.com/watch?v=wpjAOife-lk')">Play</button>
+  </div>
+
+  <div class="media media-video" data-type="video">
+    <img class="media-img" alt="Maitri II India Antarctica video" src="https://i.ytimg.com/vi/91-sW1PivR4/hqdefault.jpg">
+    <div class="media-shade"></div><span class="pill">VIDEO • YOUTUBE</span>
+    <h3>Bharati Research Station — MoES</h3>
+    <span class="media-source">YouTube • Ministry of Earth Sciences (Government of India)</span>
+    <button class="media-open" onclick="openMediaReal('Bharati Research Station — MoES','video','Official Ministry of Earth Sciences video about India’s Bharati Research Station in Antarctica.','https://www.youtube-nocookie.com/embed/91-sW1PivR4?rel=0','https://www.youtube.com/watch?v=91-sW1PivR4')">Play</button>
+  </div>
+</div></section>
+<div class="modal" id="mediaModal" onclick="if(event.target===this)closeMedia()"><div class="modalbox media-modal-large"><button class="modalclose" onclick="closeMedia()">✕</button><div class="pill" id="mediaModalType">MEDIA</div><h2 id="mediaModalTitle">Media</h2><p id="mediaModalDesc" class="muted"></p><div class="media-full-preview" id="mediaModalPreview"></div><div class="media-actions"><a class="btn primary" id="mediaOriginalLink" href="#" target="_blank" rel="noopener">Open Original Source</a><button class="btn" onclick="closeMedia()">Close</button></div><div class="media-caption" id="mediaModalCredit"></div></div></div>
+<div class="modal" id="uploadMediaModal"></div>
+<section id="studio" class="section"><h2>INFOPOLEX Website AI</h2><p class="sub">Public visitors can ask questions and get instant answers from the portal's polar-science knowledge base.</p><div class="ai-chat"><div class="ai-box"><div class="ai-messages" id="aiMessages"><div class="ai-msg bot">Namaste! Main INFOPOLEX Website AI hoon. Aap polar stations, Antarctic research, Southern Ocean, climate observations, Indian polar missions ya portal ke records ke baare mein pooch sakte hain.</div></div><div class="ai-compose"><input class="input" id="aiQuestion" placeholder="Ask: Maitri station kya hai?" onkeydown="if(event.key==='Enter')askAI()"><button class="btn primary" id="askAIBtn" onclick="askAI()">Ask AI</button></div><div class="ai-status" id="aiStatus">INFOPOLEX AI • Public access • Secure Gemini backend supported</div><div class="ai-suggestions"><button class="btn" onclick="setAIQuestion('Maitri station kya hai?')">Maitri station?</button><button class="btn" onclick="setAIQuestion('Bharati station ke baare mein batao')">Bharati?</button><button class="btn" onclick="setAIQuestion('INFOPOLEX kya karta hai?')">Portal?</button><button class="btn" onclick="setAIQuestion('Polar climate observations kya hain?')">Climate?</button></div></div><div class="card"><h3>AI Knowledge Base</h3><p class="muted">The public AI uses the INFOPOLEX repository, station profiles and portal documentation as its immediate knowledge source.</p><div class="detailitem"><b>Public access</b><span>Questions can be asked without login.</span></div><div class="detailitem" style="margin-top:10px"><b>Firebase records</b><span>Research records loaded from Firestore are included when available.</span></div><div class="detailitem" style="margin-top:10px"><b>Gemini connection</b><span>Secure server-side Gemini endpoint is connected without exposing an API key in this HTML.</span></div></div></div></section>
+<section id="admin" class="section"><h2>Admin Dashboard</h2><p class="sub">Verified publisher workspace for review, moderation and dissemination.</p><div class="admin"><div class="card"><h3>Content Review Queue</h3><table class="table"><tr><th>Item</th><th>Type</th><th>Status</th></tr><tr><td>Antarctic climate dataset</td><td>Dataset</td><td class="ok">Verified</td></tr><tr><td>Expedition 2026 media pack</td><td>Media</td><td class="warn">Pending</td></tr><tr><td>Ocean observation summary</td><td>Article</td><td class="ok">Approved</td></tr><tr><td>Station metadata update</td><td>Station</td><td class="warn">Review</td></tr></table></div><div class="card"><h3>System Health</h3><p>Firebase <span class="ok">● Online</span></p><p>Repository <span class="ok">● Healthy</span></p><p>AI Service <span class="ok">● Ready</span></p><p>Social Webhook <span class="warn">● Demo</span></p></div></div></section>
+
+<div class="modal" id="addModal" onclick="if(event.target===this) closeAddResearch()">
+  <div class="modalbox">
+    <div class="modalhead"><div><span class="pill">ADMIN</span><h2>Add Research Record</h2><div class="muted">This record will be saved to Firebase Firestore → research.</div></div><button class="modalclose" onclick="closeAddResearch()">✕ Close</button></div>
+    <div class="detailgrid">
+      <div class="detailitem"><b>Title *</b><input class="input" id="addTitle" style="width:100%;min-width:0" placeholder="e.g. Antarctic Ice Core Study"></div>
+      <div class="detailitem"><b>Category *</b><select class="select" id="addCategory" style="width:100%"><option>Climate</option><option>Ocean</option><option>Atmosphere</option><option>Station</option><option>Mission</option><option>Media</option><option>Other</option></select></div>
+      <div class="detailitem"><b>Type *</b><select class="select" id="addType" style="width:100%"><option>Dataset</option><option>Article</option><option>Station</option><option>Mission</option><option>Media</option><option>Research</option></select></div>
+      <div class="detailitem"><b>Year</b><input class="input" id="addYear" style="width:100%;min-width:0" value="2026"></div>
+      <div class="detailitem"><b>Status</b><select class="select" id="addStatus" style="width:100%"><option>verified</option><option>pending</option><option>approved</option><option>review</option></select></div>
+      <div class="detailitem"><b>Source</b><input class="input" id="addSource" style="width:100%;min-width:0" value="INFOPOLEX Repository"></div>
+    </div>
+    <div class="detailitem"><b>Description *</b><textarea class="textarea" id="addDescription" style="min-height:110px" placeholder="Short description of the research record..."></textarea></div>
+    <div class="modalactions"><button class="btn primary" id="saveResearchBtn">Save to Firebase</button><button class="btn" onclick="closeAddResearch()">Cancel</button></div>
+    <div class="muted" id="addResearchMsg" style="margin-top:10px"></div>
+  </div>
+</div>
+<div class="modal" id="recordModal" onclick="if(event.target===this) closeRecord()">
+  <div class="modalbox">
+    <div class="modalhead"><div><span class="pill" id="modalType">DATASET</span><h2 id="modalTitle">Record</h2><div class="verify">✓ Verified demo record</div></div><button class="modalclose" onclick="closeRecord()">✕ Close</button></div>
+    <div class="detailgrid"><div class="detailitem"><b>Category</b><span id="modalCategory">—</span></div><div class="detailitem"><b>Year</b><span id="modalYear">2024</span></div><div class="detailitem"><b>Source</b><span id="modalSource">INFOPOLEX Demo Repository</span></div><div class="detailitem"><b>Access</b><span>Public / Verified</span></div></div>
+    <h3>About this record</h3><p class="muted" id="modalDescription">—</p>
+    <h3>Research relevance</h3><p class="muted" id="modalRelevance">This record demonstrates how polar research information can be organized and made accessible to students, researchers and the public.</p>
+    <div class="modalactions"><button class="btn primary" onclick="downloadRecord()">Download Demo Record</button><button class="btn" onclick="closeRecord()">Back to Repository</button></div>
+  </div>
+</div>
+<div class="footer">INFOPOLEX • NEOCODEX • SIH 2026 MVP • Demo data only</div></main></div>
+<script>
+const data=[['Antarctic Climate Observations','Climate','Dataset','40+ years of polar observations and climate records.'],['Indian Polar Stations — Maitri','Station','Station','Research station profile, location and expedition metadata.'],['Bharati Ocean Observations','Ocean','Dataset','Oceanographic observations from the Southern Ocean.'],['Atmospheric Research Archive','Atmosphere','Dataset','Atmospheric measurements and expedition research notes.'],['Polar Mission Knowledge Base','Climate','Article','Mission-level summaries for students and public outreach.'],['Southern Ocean Media Collection','Ocean','Media','Curated visual assets from polar expeditions.']];
+window.repoData = data;
+function render(){let source=window.repoData||data;let q=(document.getElementById('search')?.value||'').toLowerCase(),f=document.getElementById('filter')?.value||'All';let rows=source.filter(x=>(f==='All'||x[1]===f)&&x.join(' ').toLowerCase().includes(q));let out=rows.map((x,i)=>`<div class="card"><span class="pill">${x[2].toUpperCase()}</span><h3>${x[0]}</h3><div class="muted">${x[3]}</div><p class="verify">✓ ${x[4]||'Verified demo record'}</p><button class="btn" onclick="openRecord(${i})">View record</button></div>`).join('');document.getElementById('repoGrid').innerHTML=out||'<div class="card">No matching records found.</div>'}
+function go(p){if(p==='admin' && !window.currentUserSignedIn){alert('Please login first.');return;}document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===p));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===p));window.scrollTo({top:0,behavior:'smooth'});if(p==='map'){setTimeout(function(){window.dispatchEvent(new Event('resize'));},80);}}document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>go(b.dataset.page));document.getElementById('search').oninput=render;document.getElementById('filter').onchange=render;render();
+function openRecord(i){let source=window.repoData||data;let q=(document.getElementById('search')?.value||'').toLowerCase(),f=document.getElementById('filter')?.value||'All';let rows=source.filter(x=>(f==='All'||x[1]===f)&&x.join(' ').toLowerCase().includes(q));let x=rows[i];if(!x)return;document.getElementById('modalType').textContent=(x[2]||'RESEARCH').toUpperCase();document.getElementById('modalTitle').textContent=x[0]||'Record';document.getElementById('modalCategory').textContent=x[1]||'—';document.getElementById('modalYear').textContent=x[7]||'2026';document.getElementById('modalSource').textContent=x[6]||'INFOPOLEX Repository';document.getElementById('modalDescription').textContent=x[3]||'—';document.getElementById('modalRelevance').textContent=x[8]||'This record demonstrates how polar research information can be organized and made accessible to students, researchers and the public.';document.getElementById('recordModal').classList.add('show');document.body.style.overflow='hidden';window.currentRecord=x;}
+function closeRecord(){document.getElementById('recordModal').classList.remove('show');document.body.style.overflow='';}
+function downloadRecord(){let x=window.currentRecord;if(!x)return;let content=`INFOPOLEX DEMO RECORD\n\nTitle: ${x[0]}\nCategory: ${x[1]}\nType: ${x[2]}\nDescription: ${x[3]}\nStatus: Verified demo record\nSource: INFOPOLEX Demo Repository\n`;let blob=new Blob([content],{type:'text/plain'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=x[0].replace(/[^a-z0-9]+/gi,'_').toLowerCase()+'.txt';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeRecord();});
+
+/* 3D polar globe: standalone canvas demo, no Node/npm/API required. */
+(function initPolarGlobe(){
+  var canvas=document.getElementById('polarCanvas'); if(!canvas)return;
+  var stage=document.getElementById('polarStage'),ctx=canvas.getContext('2d');
+  var rotX=0.18, rotY=-0.45, zoom=1, dragging=false, lastX=0, lastY=0, dpr=window.devicePixelRatio||1;
+  var selected='maitri';
+  var stations={
+    maitri:{name:'Maitri Station',lat:-70.77,lon:11.73,desc:'Antarctic research station profile and expedition metadata.'},
+    bharati:{name:'Bharati Station',lat:-69.40,lon:76.19,desc:'Antarctic station and Southern Ocean research context.'},
+    arctic:{name:'Arctic Research Zone',lat:70,lon:20,desc:'Schematic demo region for Arctic research discovery; exact research locations require verified source data.'}
+  };
+  function resize(){var r=stage.getBoundingClientRect();canvas.width=Math.max(1,Math.floor(r.width*dpr));canvas.height=Math.max(1,Math.floor(r.height*dpr));canvas.style.width=r.width+'px';canvas.style.height=r.height+'px';ctx.setTransform(dpr,0,0,dpr,0,0);draw();}
+  function project(lat,lon){
+    var a=(lon*Math.PI/180)+rotY, b=(lat*Math.PI/180)+rotX;
+    var x=Math.cos(b)*Math.sin(a), y=Math.sin(b), z=Math.cos(b)*Math.cos(a);
+    return {x:x,y:y,z:z,visible:z>0};
+  }
+  function draw(){
+    var w=canvas.clientWidth,h=canvas.clientHeight,cx=w/2,cy=h/2,R=Math.min(w,h)*0.34*zoom;
+    ctx.clearRect(0,0,w,h);
+    var g=ctx.createRadialGradient(cx-R*.35,cy-R*.4,R*.1,cx,cy,R*1.2);g.addColorStop(0,'#1a6684');g.addColorStop(.48,'#0a3550');g.addColorStop(1,'#03111f');ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    ctx.save();ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.clip();
+    // latitude/longitude grid
+    ctx.lineWidth=1;ctx.strokeStyle='rgba(111,220,255,.18)';
+    for(var lat=-75;lat<=75;lat+=15){var p=project(lat,0);var yy=cy-p.y*R;var rx=R*Math.cos(lat*Math.PI/180)*Math.max(.12,Math.sqrt(Math.max(0,1-(Math.sin((lat*Math.PI/180)+rotX))**2)));ctx.beginPath();ctx.ellipse(cx,yy,Math.abs(rx),Math.max(3,Math.abs(rx)*.22),0,0,Math.PI*2);ctx.stroke();}
+    for(var lon=-150;lon<=180;lon+=30){ctx.beginPath();var first=true;for(var lat=-90;lat<=90;lat+=3){var p=project(lat,lon);var xx=cx+p.x*R,yy=cy-p.y*R;if(first){ctx.moveTo(xx,yy);first=false}else ctx.lineTo(xx,yy);}ctx.stroke();}
+    // Antarctica polar cap / ice shelf visual
+    ctx.fillStyle='rgba(220,245,255,.22)';ctx.beginPath();
+    for(var lon=-180;lon<=180;lon+=4){var p=project(-58,lon),xx=cx+p.x*R,yy=cy-p.y*R;if(lon===-180)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy)}
+    for(var lon2=180;lon2>=-180;lon2-=4){var p2=project(-90,lon2),xx2=cx+p2.x*R,yy2=cy-p2.y*R;ctx.lineTo(xx2,yy2)}ctx.closePath();ctx.fill();
+    // schematic expedition route between stations
+    var route=[];for(var t=0;t<=1;t+=.03){var lat=-70.77+(-69.40+70.77)*t,lon=11.73+(76.19-11.73)*t;route.push(project(lat,lon));}
+    ctx.strokeStyle='#57d7ff';ctx.lineWidth=2;ctx.setLineDash([6,5]);ctx.beginPath();route.forEach(function(p,i){var xx=cx+p.x*R,yy=cy-p.y*R;i?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy)});ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    // outer rim
+    ctx.strokeStyle='rgba(112,221,255,.45)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.stroke();
+    // stations
+    Object.keys(stations).forEach(function(k){var s=stations[k],p=project(s.lat,s.lon);if(!p.visible)return;var x=cx+p.x*R,y=cy-p.y*R,rad=k===selected?7:5;ctx.beginPath();ctx.fillStyle=k===selected?'#ffffff':'#ffbd66';ctx.shadowBlur=k===selected?18:10;ctx.shadowColor='#ffbd66';ctx.arc(x,y,rad,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;if(k===selected){ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.beginPath();ctx.arc(x,y,rad+6,0,Math.PI*2);ctx.stroke();ctx.fillStyle='#edf6ff';ctx.font='bold 12px Segoe UI,Arial';ctx.fillText(s.name,x+10,y-10);}});
+    ctx.fillStyle='rgba(237,246,255,.7)';ctx.font='11px Segoe UI,Arial';ctx.fillText('Drag to rotate',cx-R,cy+R+24);
+  }
+  function selectStation(key){if(!stations[key])return;selected=key;document.querySelectorAll('.station-card').forEach(function(el){el.classList.toggle('active',el.getAttribute('data-station')===key)});var s=stations[key];document.getElementById('mapDetail').innerHTML='<h3>'+s.name+'</h3><p>'+s.desc+'</p><button class="btn primary" type="button" id="mapExplore">Explore related records →</button>';document.getElementById('mapExplore').onclick=function(){go('repo');var search=document.getElementById('search');if(search){search.value=s.name.replace(' Station','');render();}};draw();}
+  document.querySelectorAll('.station-card').forEach(function(el){el.addEventListener('click',function(){selectStation(el.getAttribute('data-station'))})});
+  canvas.addEventListener('pointerdown',function(e){dragging=true;lastX=e.clientX;lastY=e.clientY;canvas.classList.add('dragging');canvas.setPointerCapture&&canvas.setPointerCapture(e.pointerId)});
+  canvas.addEventListener('pointermove',function(e){if(!dragging)return;var dx=e.clientX-lastX,dy=e.clientY-lastY;lastX=e.clientX;lastY=e.clientY;rotY+=dx*.008;rotX=Math.max(-1.2,Math.min(1.2,rotX+dy*.008));draw()});
+  canvas.addEventListener('pointerup',function(){dragging=false;canvas.classList.remove('dragging')});canvas.addEventListener('pointercancel',function(){dragging=false;canvas.classList.remove('dragging')});
+  canvas.addEventListener('wheel',function(e){e.preventDefault();zoom=Math.max(.72,Math.min(1.45,zoom+(e.deltaY<0?.08:-.08)));draw()});
+  canvas.addEventListener('click',function(e){if(dragging)return;var r=canvas.getBoundingClientRect(),cx=r.width/2,cy=r.height/2,R=Math.min(r.width,r.height)*.34*zoom;Object.keys(stations).forEach(function(k){var p=project(stations[k].lat,stations[k].lon);if(!p.visible)return;var x=cx+p.x*R,y=cy-p.y*R;if(Math.hypot(e.clientX-r.left-x,e.clientY-r.top-y)<16)selectStation(k);})});
+  document.getElementById('zoomIn').onclick=function(){zoom=Math.min(1.45,zoom+.12);draw()};document.getElementById('zoomOut').onclick=function(){zoom=Math.max(.72,zoom-.12);draw()};document.getElementById('resetGlobe').onclick=function(){rotX=.18;rotY=-.45;zoom=1;selectStation('maitri')};
+  window.addEventListener('resize',resize);resize();
+})();
+function generate(){let t=document.getElementById('topic').value.trim()||'India polar science';let tone=document.getElementById('tone').value;document.getElementById('preview').textContent=`${t}\n\nDiscover the science behind India's polar research and its role in understanding our changing planet. Explore expedition knowledge, observations and stories through INFOPOLEX.\n\nTone: ${tone}\n#PolarScience #India #ClimateResearch #INFOPOLEX`;}let lite=false;document.getElementById('lite').onclick=()=>{lite=!lite;document.body.style.filter=lite?'saturate(.65) contrast(.95)':'none';document.getElementById('lite').textContent=lite?'⚡ Lite Mode: ON':'⚡ Lite Mode'};document.getElementById('lang').onclick=()=>{document.getElementById('lang').textContent=document.getElementById('lang').textContent==='हिंदी'?'EN':'हिंदी';alert('Demo language toggle. Production version can connect Google Translate API.');};
+</script>
+<script>
+/* UI fallback: login modal must open even if Firebase modules are delayed/blocked. */
+(function(){
+  const open=document.getElementById('loginOpenBtn'), close=document.getElementById('loginCloseBtn'), screen=document.getElementById('loginScreen');
+  function show(){ if(screen){screen.style.display='flex'; document.body.style.overflow='hidden'; setTimeout(()=>document.getElementById('loginEmail')?.focus(),50); } }
+  function hide(){ if(screen){screen.style.display='none'; document.body.style.overflow=''; } }
+  if(open) open.onclick=show;
+  if(close) close.onclick=hide;
+  if(screen) screen.addEventListener('click',e=>{if(e.target===screen)hide();});
+})();
+</script>
+<script>
+function openMedia(title,type,desc){openMediaReal(title,type,desc,'','');}
+function safeAttr(v){return String(v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function openMediaReal(title,type,desc,url,source){
+  document.getElementById('mediaModalTitle').textContent=title||'Media';
+  document.getElementById('mediaModalType').textContent=(type||'media').toUpperCase();
+  document.getElementById('mediaModalDesc').textContent=desc||'';
+  const box=document.getElementById('mediaModalPreview');
+  const link=document.getElementById('mediaOriginalLink');
+  const credit=document.getElementById('mediaModalCredit');
+  box.innerHTML='';
+  if(type==='video' && url){
+    let videoUrl=url;
+    if(url.indexOf('youtube.com/watch')>=0){ const m=url.match(/[?&]v=([^&]+)/); if(m) videoUrl='https://www.youtube-nocookie.com/embed/'+m[1]+'?rel=0&modestbranding=1'; } else if(url.indexOf('youtu.be/')>=0){ const m=url.match(/youtu\.be\/([^?&]+)/); if(m) videoUrl='https://www.youtube-nocookie.com/embed/'+m[1]+'?rel=0&modestbranding=1'; }
+    box.innerHTML='<iframe src="'+safeAttr(videoUrl)+'" title="'+safeAttr(title||'Video')+'" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe><div style="margin-top:10px;text-align:center"><a class="btn primary" href="'+safeAttr(url)+'" target="_blank" rel="noopener">▶ Open Video / Original</a></div>';
+  }else if(url){
+    box.innerHTML='<img src="'+safeAttr(url)+'" alt="'+safeAttr(title||'Media')+'" style="cursor:zoom-in" onclick="window.open(this.src,\'_blank\')"><div style="margin-top:10px;text-align:center;display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><a class="btn primary" href="'+safeAttr(url)+'" target="_blank" rel="noopener">🔎 Open Full Original</a><a class="btn" href="'+safeAttr(url)+'" download target="_blank" rel="noopener">⬇ Download Original</a></div>';
+  }else{
+    box.innerHTML='<div class="muted">Media preview unavailable.</div>';
+  }
+  link.href=source||url||'#';
+  link.style.display=(source||url)?'inline-flex':'none';
+  link.textContent=type==='video'?'Open Source / Video':'Open Original Source';
+  credit.textContent=source ? 'Source / attribution page: '+source : 'Original media URL: '+(url||'');
+  document.getElementById('mediaModal').classList.add('show');
+}
+function closeMedia(){document.getElementById('mediaModal').classList.remove('show');}
+document.querySelectorAll('.media-filter').forEach(function(btn){btn.onclick=function(){document.querySelectorAll('.media-filter').forEach(b=>b.classList.remove('active'));btn.classList.add('active');let f=btn.dataset.filter;document.querySelectorAll('#mediaGallery .media').forEach(function(card){card.classList.toggle('hidden',f!=='all'&&card.dataset.type!==f);});};});
+document.getElementById('mediaModal')?.addEventListener('click',function(e){if(e.target===this)closeMedia();});
+</script>
+<!-- Firebase connection: Authentication + Firestore repository + Admin add + Logout -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js';
+  import { getFirestore, collection, getDocs, addDoc, doc, getDoc, deleteDoc, serverTimestamp, query, orderBy } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js';
+  import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-storage.js';
+  import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js';
+
+  const firebaseConfig = {
+    apiKey: 'AIzaSyAHfQ2tkpuKkbnGDx1i28JCn8G2tr4VCpM',
+    authDomain: 'infopolex-cf6a6.firebaseapp.com',
+    projectId: 'infopolex-cf6a6',
+    storageBucket: 'infopolex-cf6a6.firebasestorage.app',
+    messagingSenderId: '491560115748',
+    appId: '1:491560115748:web:73552b3144327b5d6c02b1',
+    measurementId: 'G-SXRZX6T30H'
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  const storage = getStorage(app);
+  let currentUser = null; window.currentUserSignedIn=false;
+  let currentRole = 'public';
+
+  function esc(v){ return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  async function loadResearchFromFirebase() {
+    const grid = document.getElementById('repoGrid');
+    try {
+      const snap = await getDocs(collection(db, 'research'));
+      if (snap.empty) {
+        grid.innerHTML = '<div class="card"><h3>No research records yet</h3><div class="muted">Click ＋ Add Research to create the first record.</div></div>';
+        window.repoData = [];
+        return;
+      }
+      window.repoData = snap.docs.map(docSnap => {
+        const d = docSnap.data() || {};
+        return [d.title || 'Untitled Research Record', d.category || 'Other', d.type || 'Research', d.description || 'No description available.', d.status ? `Firebase record • ${d.status}` : 'Firebase record', docSnap.id, d.source || 'INFOPOLEX Repository', d.year || '2026', d.relevance || 'This record demonstrates how polar research information can be organized and made accessible to students, researchers and the public.'];
+      });
+      const select = document.getElementById('filter');
+      const categories = [...new Set(window.repoData.map(x => x[1]).filter(Boolean))];
+      categories.forEach(category => { if (![...select.options].some(o => o.value === category)) { const option=document.createElement('option'); option.value=category; option.textContent=category; select.appendChild(option); } });
+      render();
+      console.log('INFOPOLEX Firebase: research records loaded:', window.repoData.length);
+    } catch (error) {
+      console.error('INFOPOLEX Firebase Firestore error:', error);
+      // Public visitors can still explore the portal even if Firestore rules do not yet allow public reads.
+      window.repoData = data.map(x => [x[0],x[1],x[2],x[3],'Demo record','','INFOPOLEX Demo Repository','2026']);
+      render();
+    }
+  }
+
+  function openAddResearch(){ document.getElementById('addModal').classList.add('show'); document.getElementById('addResearchMsg').textContent=''; document.body.style.overflow='hidden'; }
+  window.closeAddResearch=function(){ document.getElementById('addModal').classList.remove('show'); document.body.style.overflow=''; };
+
+  async function saveResearch(){
+    const title=document.getElementById('addTitle').value.trim();
+    const description=document.getElementById('addDescription').value.trim();
+    const msg=document.getElementById('addResearchMsg');
+    if(!title || !description){ msg.textContent='Title and Description are required.'; return; }
+    if(!currentUser){ msg.textContent='Please login first.'; return; }
+    const btn=document.getElementById('saveResearchBtn'); btn.disabled=true; msg.textContent='Saving to Firebase...';
+    try{
+      await addDoc(collection(db,'research'), {
+        title, category:document.getElementById('addCategory').value, type:document.getElementById('addType').value, description, year:document.getElementById('addYear').value.trim() || '2026', status:document.getElementById('addStatus').value, source:document.getElementById('addSource').value.trim() || 'INFOPOLEX Repository', createdBy:currentUser.uid, createdAt:serverTimestamp()
+      });
+      msg.textContent='Saved successfully ✓';
+      ['addTitle','addDescription'].forEach(id=>document.getElementById(id).value='');
+      await loadResearchFromFirebase();
+      setTimeout(closeAddResearch,500);
+    }catch(e){ console.error(e); msg.textContent='Save failed: '+(e.code||e.message); }
+    finally{ btn.disabled=false; }
+  }
+
+  async function seedDemoRecords(){
+    if(!currentUser){ alert('Please login first.'); return; }
+    const records=[
+      {title:'Indian Polar Stations — Maitri',category:'Station',type:'Station',description:'Research station profile, location and expedition metadata.',year:'2026',status:'verified',source:'INFOPOLEX Demo Repository'},
+      {title:'Bharati Ocean Observations',category:'Ocean',type:'Dataset',description:'Oceanographic observations from the Southern Ocean.',year:'2026',status:'verified',source:'INFOPOLEX Demo Repository'},
+      {title:'Atmospheric Research Archive',category:'Atmosphere',type:'Dataset',description:'Atmospheric measurements and expedition research notes.',year:'2026',status:'verified',source:'INFOPOLEX Demo Repository'},
+      {title:'Polar Mission Knowledge Base',category:'Climate',type:'Article',description:'Mission-level summaries for students and public outreach.',year:'2026',status:'verified',source:'INFOPOLEX Demo Repository'},
+      {title:'Southern Ocean Media Collection',category:'Ocean',type:'Media',description:'Curated visual assets from polar expeditions.',year:'2026',status:'verified',source:'INFOPOLEX Demo Repository'}
+    ];
+    if(!confirm('Firebase mein 5 demo research records add karne hain?')) return;
+    try{ for(const r of records) await addDoc(collection(db,'research'),{...r,createdBy:currentUser.uid,createdAt:serverTimestamp()}); await loadResearchFromFirebase(); alert('5 demo records added ✓'); }catch(e){alert('Could not add records: '+(e.code||e.message));}
+  }
+
+  document.getElementById('addResearchBtn').onclick=openAddResearch;
+  document.getElementById('saveResearchBtn').onclick=saveResearch;
+  document.getElementById('seedResearchBtn').onclick=seedDemoRecords;
+
+  const editControls=document.getElementById('editControls');
+  const adminNav=document.getElementById('adminNav');
+  const roleText=document.getElementById('roleText');
+  const loginOpenBtn=document.getElementById('loginOpenBtn');
+  const loginCloseBtn=document.getElementById('loginCloseBtn');
+  const logoutBtn=document.getElementById('logoutBtn');
+
+  function openLogin(){ loginScreen.style.display='flex'; setTimeout(()=>document.getElementById('loginEmail').focus(),50); }
+  function closeLogin(){ loginScreen.style.display='none'; }
+  loginOpenBtn.onclick=openLogin;
+  loginCloseBtn.onclick=closeLogin;
+  loginScreen.addEventListener('click',e=>{ if(e.target===loginScreen) closeLogin(); });
+
+  async function applyAccess(user){
+    if(!user){
+      currentRole='public';
+      window.currentUserSignedIn=false;
+      editControls.style.display='none';
+      mediaAdmin.classList.remove('show');
+      logoutBtn.style.display='none';
+      loginOpenBtn.style.display='inline-block';
+      adminNav.style.display='none';
+      roleText.textContent='Public Viewer';
+      document.getElementById('userEmail').textContent='🌐 Public View';
+      return;
+    }
+    currentRole='user';
+    window.currentUserSignedIn=true;
+    try{
+      const snap=await getDoc(doc(db,'users',user.uid));
+      if(snap.exists() && snap.data().role==='admin') currentRole='admin';
+    }catch(e){ console.warn('Role lookup skipped:',e); }
+    editControls.style.display='flex';
+    mediaAdmin.classList.add('show');
+    logoutBtn.style.display='inline-block';
+    loginOpenBtn.style.display='none';
+    adminNav.style.display=currentRole==='admin'?'block':'none';
+    roleText.textContent=currentRole==='admin'?'Admin / Editor':'Signed-in Editor';
+    document.getElementById('userEmail').textContent=`👤 ${user.email || 'User'}`;
+  }
+
+  const portalApp=document.getElementById('portalApp');
+  const loginForm=document.getElementById('loginForm');
+  const loginBtn=document.getElementById('loginBtn');
+  const loginMsg=document.getElementById('loginMsg');
+
+  function showLogin(){
+    portalApp.classList.add('ready');
+    closeLogin();
+    applyAccess(null);
+    loginMsg.textContent='';
+    document.getElementById('loginPassword').value='';
+  }
+
+  function showPortal(user){
+    portalApp.classList.add('ready');
+    closeLogin();
+    applyAccess(user);
+  }
+
+  loginForm.addEventListener('submit', async (event)=>{
+    event.preventDefault();
+    loginMsg.textContent='';
+    loginBtn.disabled=true;
+    loginBtn.textContent='Logging in...';
+    try{
+      const email=document.getElementById('loginEmail').value.trim();
+      const password=document.getElementById('loginPassword').value;
+      await signInWithEmailAndPassword(auth,email,password);
+    }catch(e){
+      console.error('INFOPOLEX login error:',e);
+      loginMsg.textContent='Login failed: '+(e.code==='auth/invalid-credential'?'Email or password is incorrect.':(e.message||'Please try again.'));
+    }finally{
+      loginBtn.disabled=false;
+      loginBtn.textContent='Login';
+    }
+  });
+
+  document.getElementById('logoutBtn').onclick=async()=>{
+    const btn=document.getElementById('logoutBtn');
+    btn.disabled=true;
+    try{
+      await signOut(auth);
+      currentUser=null;
+      showLogin();
+      document.getElementById('loginEmail').focus();
+    }catch(e){
+      alert('Logout failed: '+e.message);
+    }finally{
+      btn.disabled=false;
+    }
+  };
+
+  // -------- Media manager --------
+  const mediaAdmin=document.getElementById('mediaAdmin');
+  const mediaUploadBox=document.getElementById('mediaUploadBox');
+  const mediaUploadMsg=document.getElementById('mediaUploadMsg');
+  const mediaGallery=document.getElementById('mediaGallery');
+  let mediaItems=[];
+  function mediaCard(item){
+    const safeTitle=esc(item.title||'Untitled Media'), type=esc(item.type||'photo');
+    const src=esc(item.url||'');
+    const visual = type==='video' ? `<video class="media-img" src="${src}" muted preload="metadata" playsinline></video>` : `<img class="media-img" src="${src}" alt="${safeTitle}">`;
+    return `<div class="media firebase-media" data-type="${type}" data-media-id="${esc(item.id||'')}" data-media-url="${src}">${visual}<div class="media-shade"></div><span class="pill">${type.toUpperCase()}</span><h3>${safeTitle}</h3><button class="media-open js-media-open" type="button">${type==='video'?'▶ Play':'Open Full'}</button>${currentUser?`<button class="media-open js-media-remove" style="right:88px" type="button">Remove</button>`:''}</div>`;
+  }
+  async function loadMedia(){
+    try{
+      const snap=await getDocs(collection(db,'media'));
+      mediaItems=snap.docs.map(d=>({id:d.id,...d.data()}));
+      const html=mediaItems.map(mediaCard).join('');
+      mediaGallery.querySelectorAll('.firebase-media').forEach(x=>x.remove());
+      if(html){ mediaGallery.insertAdjacentHTML('beforeend',html); }
+      mediaGallery.querySelectorAll('.firebase-media').forEach(card=>{
+        const item=mediaItems.find(x=>x.id===card.dataset.mediaId);
+        const open=card.querySelector('.js-media-open');
+        const remove=card.querySelector('.js-media-remove');
+        if(open && item) open.addEventListener('click',()=>openMediaReal(item.title,item.type,item.description||'Uploaded media',item.url,item.url));
+        if(remove && item) remove.addEventListener('click',()=>removeMedia(item.id,item.storagePath||''));
+      });
+      applyMediaFilter(document.querySelector('.media-filter.active')?.dataset.filter||'all');
+    }catch(e){ console.warn('Media collection unavailable:',e); }
+  }
+  window.openMediaItem=function(encoded){
+    try{ const item=JSON.parse(decodeURIComponent(encoded)); openMediaReal(item.title,item.type,item.description||'Uploaded by INFOPOLEX user.',item.url,item.url); }catch(e){ console.error(e); }
+  };
+  window.removeMedia=async function(id,storagePath){
+    if(!currentUser){alert('Login required.');return;}
+    if(!confirm('Is media ko remove karna hai?')) return;
+    try{
+      if(storagePath) await deleteObject(ref(storage,storagePath));
+    }catch(e){ console.warn('Storage delete:',e); }
+    try{ if(id) await deleteDoc(doc(db,'media',id)); await loadMedia(); }catch(e){ alert('Remove failed: '+(e.code||e.message)); }
+  };
+  async function uploadMedia(){
+    if(!currentUser){mediaUploadMsg.textContent='Please login first.';return;}
+    const file=document.getElementById('mediaFile').files[0], title=document.getElementById('mediaTitle').value.trim(), type=document.getElementById('mediaType').value;
+    if(!file||!title){mediaUploadMsg.textContent='Title and file are required.';return;}
+    const btn=document.getElementById('uploadMediaBtn');btn.disabled=true;mediaUploadMsg.textContent='Uploading...';
+    try{
+      const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,'_'); const storagePath=`media/${currentUser.uid}/${Date.now()}_${safe}`;
+      const storageRef=ref(storage,storagePath); await uploadBytes(storageRef,file); const url=await getDownloadURL(storageRef);
+      await addDoc(collection(db,'media'),{title,type,url,storagePath,description:`Uploaded by ${currentUser.email||'INFOPOLEX user'}`,createdBy:currentUser.uid,createdAt:serverTimestamp()});
+      mediaUploadMsg.textContent='Uploaded successfully ✓'; document.getElementById('mediaTitle').value='';document.getElementById('mediaFile').value=''; await loadMedia();
+    }catch(e){ console.error(e); mediaUploadMsg.textContent='Upload failed: '+(e.code||e.message)+'. Firebase Storage rules/service check karein.'; }
+    finally{btn.disabled=false;}
+  }
+  document.getElementById('addMediaBtn').onclick=()=>mediaUploadBox.classList.toggle('show');
+  document.getElementById('cancelMediaBtn').onclick=()=>mediaUploadBox.classList.remove('show');
+  document.getElementById('uploadMediaBtn').onclick=uploadMedia;
+  document.getElementById('refreshMediaBtn').onclick=loadMedia;
+  function applyMediaFilter(f){document.querySelectorAll('#mediaGallery .media').forEach(card=>card.classList.toggle('hidden',f!=='all'&&card.dataset.type!==f));}
+  window.applyMediaFilter=applyMediaFilter;
+  document.querySelectorAll('.media-filter').forEach(btn=>btn.onclick=function(){document.querySelectorAll('.media-filter').forEach(b=>b.classList.remove('active'));this.classList.add('active');applyMediaFilter(this.dataset.filter);});
+
+  // -------- Public website AI: real Gemini endpoint + safe local fallback --------
+  const AI_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxACFkHQvp0a9IMWx7x06YdtTN-uBlmh3P-0tHZLxkp9U3V9CtoVnVPxZDssuRHFu6NVw/exec';
+  window.setAIQuestion=function(q){document.getElementById('aiQuestion').value=q;askAI();};
+  function aiFallback(q){
+    const x=q.toLowerCase();
+    const records=Array.isArray(window.repoData)?window.repoData:[];
+    const hits=records.filter(r=>String(r[0]||'').toLowerCase().split(/\s+/).some(w=>w.length>3&&x.includes(w))).slice(0,3);
+    if(hits.length) return 'INFOPOLEX Repository se related record mila:\n\n'+hits.map(r=>'• '+r[0]+' — '+r[1]+'\n  '+r[3]).join('\n\n')+'\n\nSource: Firebase research repository.';
+    if(/hello|hi|namaste|hey/.test(x)) return 'Namaste! Main INFOPOLEX AI hoon. Polar science, Maitri, Bharati, Himadri, climate, Southern Ocean, missions, media aur portal ke baare mein poochiye.';
+    if(x.includes('maitri')) return 'Maitri India ka Antarctic research station hai. INFOPOLEX mein Maitri se related station information, research records aur media explore kiya ja sakta hai.';
+    if(x.includes('bharati')) return 'Bharati India ka Antarctic research station hai. INFOPOLEX mein Bharati ke related polar-science records aur media available hain.';
+    if(x.includes('dakshin')||x.includes('gangotri')) return 'Dakshin Gangotri India ka historical Antarctic scientific base tha. INFOPOLEX Media Gallery mein historical material explore kiya ja sakta hai.';
+    if(x.includes('arctic')||x.includes('himadri')) return 'Himadri India ka Arctic research base hai. INFOPOLEX Arctic aur Antarctic knowledge ko ek portal mein organize karta hai.';
+    if(x.includes('climate')||x.includes('jalvayu')) return 'Polar climate observations long-term environmental measurements hote hain jo polar climate aur environmental change ko study karne mein help karte hain.';
+    if(x.includes('ocean')) return 'Southern Ocean Antarctica ko surround karta hai aur polar climate, sea ice aur ocean processes ke research ke liye important hai.';
+    if(x.includes('mission')||x.includes('expedition')) return 'INFOPOLEX Indian polar missions aur expeditions ke research records, media aur outreach information ko connect karta hai.';
+    if(x.includes('media')||x.includes('photo')||x.includes('video')) return 'Media Gallery mein original-source photographs aur videos hain. Signed-in users Firebase Storage ke through media upload/remove kar sakte hain.';
+    if(x.includes('map')||x.includes('3d')) return '3D Polar Map interactive globe par Indian polar stations ko explore karne deta hai.';
+    return 'INFOPOLEX knowledge base mein is question ka verified answer abhi nahi mila. Aap apna question thoda specific karke pooch sakte hain.';
+  }
+  // Apps Script JSONP is used here because this portal is currently opened as file://
+  // and a normal cross-origin POST is blocked by the browser's CORS policy.
+  function callGeminiJSONP(question, timeoutMs){
+    return new Promise(function(resolve,reject){
+      var callbackName='infopolexGemini_'+Date.now()+'_'+Math.floor(Math.random()*100000);
+      var script=document.createElement('script');
+      var timer=setTimeout(function(){cleanup();reject(new Error('Gemini backend timeout'));},timeoutMs||25000);
+      function cleanup(){clearTimeout(timer);try{delete window[callbackName];}catch(_){window[callbackName]=undefined;}if(script.parentNode)script.parentNode.removeChild(script);}
+      window[callbackName]=function(data){cleanup();resolve(data);};
+      script.onerror=function(){cleanup();reject(new Error('Gemini backend could not be reached'));};
+      script.src=AI_ENDPOINT+'?callback='+encodeURIComponent(callbackName)+'&question='+encodeURIComponent(question)+'&t='+Date.now();
+      document.head.appendChild(script);
+    });
+  }
+  window.askAI=async function(){
+    const input=document.getElementById('aiQuestion'), q=input.value.trim(); if(!q)return;
+    const box=document.getElementById('aiMessages'), status=document.getElementById('aiStatus'), btn=document.getElementById('askAIBtn');
+    box.insertAdjacentHTML('beforeend',`<div class="ai-msg user">${esc(q)}</div>`); input.value=''; btn.disabled=true; status.textContent='INFOPOLEX Gemini AI is thinking...'; box.scrollTop=box.scrollHeight;
+    try{
+      if(!AI_ENDPOINT) throw new Error('AI endpoint not configured');
+      const data=await callGeminiJSONP(q,30000);
+      if(!data || data.success!==true) throw new Error((data&&data.error)||'AI request failed');
+      box.insertAdjacentHTML('beforeend',`<div class="ai-msg bot">${esc(data.answer||'No answer returned.')}</div>`);
+      status.textContent='INFOPOLEX Gemini AI • Public access';
+    }catch(e){
+      console.warn('Gemini endpoint unavailable; local knowledge fallback used.',e);
+      box.insertAdjacentHTML('beforeend',`<div class="ai-msg bot">${esc(aiFallback(q))}</div>`);
+      status.textContent='INFOPOLEX Knowledge AI • Gemini temporarily unavailable';
+    }finally{btn.disabled=false; box.scrollTop=box.scrollHeight;}
+  };
+
+  onAuthStateChanged(auth, async user=>{
+    currentUser=user;
+    if(user){
+      showPortal(user);
+    }else{
+      showLogin();
+    }
+    await loadResearchFromFirebase();
+    await loadMedia();
+  });
+</script>
+<script>
+window.addEventListener('error',function(e){console.warn('INFOPOLEX UI error:',e.message);});
+window.addEventListener('unhandledrejection',function(e){console.warn('INFOPOLEX async error:',e.reason);});
+</script>
+</body></html>
